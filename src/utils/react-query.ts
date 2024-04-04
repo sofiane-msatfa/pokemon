@@ -1,10 +1,4 @@
-import {
-  DefaultError,
-  QueryClient,
-  QueryKey,
-  FetchInfiniteQueryOptions,
-  InfiniteData,
-} from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import {
   PersistedClient,
   Persister,
@@ -38,27 +32,3 @@ export const queryClient = new QueryClient({
 });
 
 export const persister = createPersister();
-
-export async function ensureInfiniteQueryData<
-  TQueryFnData,
-  TError = DefaultError,
-  TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey,
-  TPageParam = unknown
->(
-  options: FetchInfiniteQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryKey,
-    TPageParam
-  >
-): Promise<InfiniteData<TData, TPageParam>> {
-  const cachedData = queryClient.getQueryData(options.queryKey);
-
-  if (!cachedData) {
-    return queryClient.fetchInfiniteQuery(options);
-  }
-
-  return cachedData as unknown as InfiniteData<TData, TPageParam>;
-}
