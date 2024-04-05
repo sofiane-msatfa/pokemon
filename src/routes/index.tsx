@@ -6,6 +6,7 @@ import {
 import { RootLayout } from "./Root.layout";
 import { PokemonLayout } from "./pokemon/Pokemon.layout";
 import { Pokemon } from "./pokemon/Pokemon";
+import { Pokedex } from "./pokedex/Pokedex";
 
 export function createRouter() {
   return createBrowserRouter(
@@ -13,6 +14,7 @@ export function createRouter() {
       <Route element={<RootLayout />}>
         <Route element={<PokemonLayout />}>
           <Route index element={<Pokemon />} />
+          <Route path="/pokedex" element={<Pokedex />} />
         </Route>
       </Route>
     )

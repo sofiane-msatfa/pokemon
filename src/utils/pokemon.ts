@@ -43,3 +43,21 @@ export function getBackgroundColor(types: ApiType[]) {
 
   return "bg-gray-300";
 }
+
+
+export const pokemonTypeArray = [
+  "normal",
+  "feu",
+  "eau",
+  "électrik",
+  "poison",
+  "plante",
+  "glace",
+  "psy",
+  "insecte",
+  "roche",
+  "spectre",
+  "dragon",
+  "ténèbres",
+  "acier",
+]
