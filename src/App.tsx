@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useIsRestoring } from "@tanstack/react-query";
 import { NextUIProvider } from "@nextui-org/react";
 import { queryClient, persister } from "@/utils/react-query";
+import { PokedexProvider } from "./context/Pokedex.provider";
 import { Router } from "./router";
 
 function PersistQueryClientGate({ children }: { children: React.ReactNode }) {
@@ -13,12 +14,11 @@ function PersistQueryClientGate({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <NextUIProvider>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister }}
-      >
+      <PersistQueryClientProvider client={queryClient} persistOptions={{ persister }}>
         <PersistQueryClientGate>
-          <Router />
+          <PokedexProvider>
+            <Router />
+          </PokedexProvider>
         </PersistQueryClientGate>
         <ReactQueryDevtools initialIsOpen={false} position="bottom" />
       </PersistQueryClientProvider>

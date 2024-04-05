@@ -1,24 +1,19 @@
-import { Button } from "@/components/Button";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+} from "@nextui-org/react";
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 export function RootLayout() {
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+  const menuItems = ["Accueil", "Pokedex"];
 
   return (
     <>
@@ -36,24 +31,14 @@ export function RootLayout() {
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" to="#">
-              Features
+            <Link color="foreground" to="/">
+              Accueil
             </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link to="#" aria-current="page">
-              Customers
+            <Link to="/pokedex" aria-current="page">
+              Pokedex
             </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" to="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-        <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
-            <Link to="#">Login</Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarMenu>
