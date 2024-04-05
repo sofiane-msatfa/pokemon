@@ -20,14 +20,17 @@ export function Pokemon() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
-  const totalPages = Math.ceil(pokemons.length / pageSize);
+  const pokemonFilteredByName = pokemons.filter((pokemon) => {
+    const cleanPokemon = cleanPokemonName(pokemon.name);
+    return cleanPokemon.includes(search.toLocaleLowerCase());
+  });
 
-  const filteredPokemons = pokemons
-    .filter((pokemon) => {
-      const cleanPokemon = cleanPokemonName(pokemon.name);
-      return cleanPokemon.includes(search.toLocaleLowerCase());
-    })
-    .slice((page - 1) * pageSize, page * pageSize);
+  const paginatedPokemons = pokemonFilteredByName.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+  const totalPages = Math.ceil(pokemonFilteredByName.length / pageSize);
 
   return (
     <div>
@@ -41,7 +44,7 @@ export function Pokemon() {
       />
       <div className="flex justify-center sm:block">
         <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-4">
-          {filteredPokemons.map((pokemon) => (
+          {paginatedPokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
           ))}
         </div>
