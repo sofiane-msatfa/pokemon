@@ -20,11 +20,11 @@ interface PokemonFilters {
 }
 
 export function Pokemon() {
-  const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
+  const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
+
   const [pokemonFilters, setpokemonFilters] = useState<PokemonFilters>({
     types: [],
     pokedex: false,
@@ -46,10 +46,7 @@ export function Pokemon() {
     return cleanPokemon.includes(search.toLowerCase());
   });
 
-  const paginatedPokemons = pokemonFilteredByName.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  const paginatedPokemons = pokemonFilteredByName.slice((page - 1) * pageSize, page * pageSize);
 
   const totalPages = Math.ceil(pokemonFilteredByName.length / pageSize);
 

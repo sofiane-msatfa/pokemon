@@ -1,14 +1,5 @@
-import {
-  DefaultError,
-  QueryClient,
-  QueryKey,
-  FetchInfiniteQueryOptions,
-  InfiniteData,
-} from "@tanstack/react-query";
-import {
-  PersistedClient,
-  Persister,
-} from "@tanstack/react-query-persist-client";
+import { QueryClient } from "@tanstack/react-query";
+import { PersistedClient, Persister } from "@tanstack/react-query-persist-client";
 import { getItem, setItem, removeItem } from "localforage";
 
 const defaultCacheKey = "react-query-cache";

@@ -1,20 +1,26 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Chip,
-  Image,
-} from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Chip, Image, Checkbox } from "@nextui-org/react";
 import { Pokemon } from "@/types";
 import { getBackgroundColor } from "@/utils/pokemon";
+import { usePokedex } from "@/hooks/usePokedex";
+import { HeartIcon } from "./HeartIcon";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
 }
 
 export function PokemonCard({ pokemon }: PokemonCardProps) {
+  const { pokemonIdList, addPokemonToPokedex, removePokemonFromPokedex } = usePokedex();
+
+  const isPokemonInPokedex = pokemonIdList.includes(pokemon.id);
   const bgColor = getBackgroundColor(pokemon.apiTypes);
+
+  const togglePokemonFromPokedex = () => {
+    if (isPokemonInPokedex) {
+      return removePokemonFromPokedex(pokemon.id);
+    }
+
+    addPokemonToPokedex(pokemon.id);
+  };
 
   return (
     <Card
@@ -41,15 +47,13 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
         </CardBody>
       </div>
       <CardFooter className="inline border-white/20 border-1 overflow-hidden absolute before:rounded-xl rounded-b-l bottom-1 h-[85px] w-[calc(100%_-_8px)] shadow-small z-5">
-        <p className="text-lg text-white/80 mb-2">{pokemon.name}</p>
+        <p className="text-lg text-white/80 mb-">{pokemon.name}</p>
         <div className="flex justify-between">
           <div>
             {pokemon.apiTypes.map((type, index) => (
               <Chip
                 key={index}
-                className={`text-white font-bold text-tiny mr-1 ${getBackgroundColor(
-                  [type]
-                )}`}
+                className={`text-white font-bold text-tiny mr-1 ${getBackgroundColor([type])}`}
               >
                 {type.name}
               </Chip>
@@ -64,6 +68,13 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
           >
             Voir
           </Button>
+          <Checkbox
+            defaultSelected
+            icon={<HeartIcon />}
+            isSelected={isPokemonInPokedex}
+            onValueChange={togglePokemonFromPokedex}
+            color="danger"
+          />
         </div>
       </CardFooter>
     </Card>

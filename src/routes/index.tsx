@@ -1,8 +1,4 @@
-import {
-  Route,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 import { RootLayout } from "./Root.layout";
 import { PokemonLayout } from "./pokemon/Pokemon.layout";
 import { Pokemon } from "./pokemon/Pokemon";
@@ -16,7 +12,8 @@ export function createRouter() {
           <Route index element={<Pokemon />} />
           <Route path="/pokedex" element={<Pokedex />} />
         </Route>
-      </Route>
-    )
+        <Route path="pokedex" element={<Pokedex />} />
+      </Route>,
+    ),
   );
 }
