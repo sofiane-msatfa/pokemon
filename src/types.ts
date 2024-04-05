@@ -25,7 +25,7 @@ export interface Stats {
 }
 
 export interface ApiType {
-  name: string;
+  name: Type;
   image: string;
 }
 
@@ -56,4 +56,25 @@ export interface ApiResistancesWithAbilities {
 export interface ResistanceModifyingAbilitiesForApi {
   name: string;
   slug: string;
+}
+
+export enum Type {
+  Normal = "Normal",
+  Combat = "Combat",
+  Vol = "Vol",
+  Poison = "Poison",
+  Sol = "Sol",
+  Roche = "Roche",
+  Insecte = "Insecte",
+  Spectre = "Spectre",
+  Acier = "Acier",
+  Feu = "Feu",
+  Eau = "Eau",
+  Plante = "Plante",
+  Électrik = "Électrik",
+  Psy = "Psy",
+  Glace = "Glace",
+  Dragon = "Dragon",
+  Ténèbres = "Ténèbres",
+  Fée = "Fée",
 }

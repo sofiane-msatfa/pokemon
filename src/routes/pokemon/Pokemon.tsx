@@ -2,8 +2,16 @@ import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
 
-import { Button, Card, CardBody, CardFooter, Chip, Image, Input } from "@nextui-org/react";
+import { Pagination, Input } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
+
+function cleanPokemonName(name: string) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "")
+    .toLowerCase();
+}
 
 export function Pokemon() {
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
@@ -12,14 +20,15 @@ export function Pokemon() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
 
+  const totalPages = Math.ceil(pokemons.length / pageSize);
+
   const filteredPokemons = pokemons
-    .filter((pokemon) => pokemon.name.includes(search))
+    .filter((pokemon) => {
+      const cleanPokemon = cleanPokemonName(pokemon.name);
+      return cleanPokemon.includes(search.toLocaleLowerCase());
+    })
     .slice((page - 1) * pageSize, page * pageSize);
 
-
-  
-
-  console.log(filteredPokemons[0].apiTypes)
   return (
     <div>
       <h1 className="text-lg font-bold my-2">Element catalogue</h1>
@@ -33,21 +42,17 @@ export function Pokemon() {
       <div className="flex justify-center sm:block">
         <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-4">
           {filteredPokemons.map((pokemon) => (
-            <PokemonCard pokemon={pokemon} />
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
           ))}
         </div>
       </div>
 
-
-      <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
-        Précédent
-      </Button>
-      <Button
-        onClick={() => setPage(page + 1)}
-        disabled={page * pageSize >= pokemons.length}
-      >
-        Suivant
-      </Button>
+      <Pagination
+        total={totalPages}
+        initialPage={1}
+        showControls
+        onChange={(page) => setPage(page)}
+      />
       <select
         value={pageSize}
         onChange={(e) => setPageSize(Number(e.target.value))}
