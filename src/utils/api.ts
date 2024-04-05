@@ -31,9 +31,7 @@ export async function getPokemonByName(name: string): Promise<Pokemon> {
   return request<Pokemon>(`/pokemon/${name}`);
 }
 
-export async function getAllPokemonFromGeneration(
-  generation: number
-): Promise<Pokemon[]> {
+export async function getAllPokemonFromGeneration(generation: number): Promise<Pokemon[]> {
   return request(`/pokemon/generation/${generation}`);
 }
 

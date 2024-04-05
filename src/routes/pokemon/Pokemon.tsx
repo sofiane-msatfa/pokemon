@@ -14,21 +14,17 @@ function cleanPokemonName(name: string) {
 }
 
 export function Pokemon() {
-  const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
+  const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
 
   const pokemonFilteredByName = pokemons.filter((pokemon) => {
     const cleanPokemon = cleanPokemonName(pokemon.name);
     return cleanPokemon.includes(search.toLocaleLowerCase());
   });
 
-  const paginatedPokemons = pokemonFilteredByName.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  const paginatedPokemons = pokemonFilteredByName.slice((page - 1) * pageSize, page * pageSize);
 
   const totalPages = Math.ceil(pokemonFilteredByName.length / pageSize);
 
@@ -56,10 +52,7 @@ export function Pokemon() {
         showControls
         onChange={(page) => setPage(page)}
       />
-      <select
-        value={pageSize}
-        onChange={(e) => setPageSize(Number(e.target.value))}
-      >
+      <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))}>
         <option value="10">10</option>
         <option value="20">20</option>
         <option value="50">50</option>
