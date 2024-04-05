@@ -1,4 +1,10 @@
-import { QueryClient } from "@tanstack/react-query";
+import {
+  DefaultError,
+  QueryClient,
+  QueryKey,
+  FetchInfiniteQueryOptions,
+  InfiniteData,
+} from "@tanstack/react-query";
 import {
   PersistedClient,
   Persister,
