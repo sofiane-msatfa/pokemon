@@ -68,7 +68,7 @@ export function Pokemon() {
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold my-4">Element catalogue</h1>
-      <div className="w-full flex flex-col sm:flex-row items-center justify-start gap-2 mb-4">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-start gap-6 mb-4">
         <Input
           label="Chercher un Pokémon"
           type="text"
@@ -79,7 +79,7 @@ export function Pokemon() {
         <Select
           value={pageSize}
           label="Sélectionner le nombre d'éléments à afficher"
-          className="w-1/2"
+          className="w-1/2 sm:w-full"
           selectionMode="single"
           color="default"
           onChange={(e) => setPageSize(Number(e.target.value))}
@@ -96,9 +96,8 @@ export function Pokemon() {
         </Select>
         <Select
           label="Choisissez un type de Pokémon"
-          placeholder="Choisissez un type de Pokémon"
           selectionMode="multiple"
-          className="max-w-xs"
+          className="w-1/2 sm:w-full"
           value={pokemonFilters.types}
           onChange={handleSetpokemonFilters}
         >

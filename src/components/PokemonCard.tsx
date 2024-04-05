@@ -33,6 +33,7 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
           width={300}
         />
         <CardBody>
+          <span>Pokdex ID : {pokemon.pokedexId}</span>
           <span>HP : {pokemon.stats.HP}</span>
           <span>Attack : {pokemon.stats.attack}</span>
           <span>Défense : {pokemon.stats.defense}</span>
