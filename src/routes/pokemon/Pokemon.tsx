@@ -1,9 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { pokemonCatalogueQuery } from "./Catalogue.queries";
 import { useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getPokemonQuery } from "./Pokemon.queries";
 
-export default function Catalogue() {
-  const { data: pokemons } = useSuspenseQuery(pokemonCatalogueQuery());
+import { Button } from "@nextui-org/react";
+
+export function Pokemon() {
+  const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -26,15 +28,15 @@ export default function Catalogue() {
           <li key={pokemon.id}>{pokemon.name}</li>
         ))}
       </ul>
-      <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+      <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
         Précédent
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => setPage(page + 1)}
         disabled={page * pageSize >= pokemons.length}
       >
         Suivant
-      </button>
+      </Button>
       <select
         value={pageSize}
         onChange={(e) => setPageSize(Number(e.target.value))}

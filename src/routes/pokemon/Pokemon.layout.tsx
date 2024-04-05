@@ -4,7 +4,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { Button } from "@/components/Button";
 
-export function HomeLayout() {
+export function PokemonLayout() {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (

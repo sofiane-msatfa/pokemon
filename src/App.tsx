@@ -1,8 +1,9 @@
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { queryClient, persister } from "@/utils/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Router } from "./router";
 import { useIsRestoring } from "@tanstack/react-query";
+import { NextUIProvider } from "@nextui-org/react";
+import { queryClient, persister } from "@/utils/react-query";
+import { Router } from "./router";
 
 function PersistQueryClientGate({ children }: { children: React.ReactNode }) {
   const isRestoring = useIsRestoring();
@@ -11,14 +12,16 @@ function PersistQueryClientGate({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister }}
-    >
-      <PersistQueryClientGate>
-        <Router />
-      </PersistQueryClientGate>
-      <ReactQueryDevtools initialIsOpen={false} position="bottom" />
-    </PersistQueryClientProvider>
+    <NextUIProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+      >
+        <PersistQueryClientGate>
+          <Router />
+        </PersistQueryClientGate>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom" />
+      </PersistQueryClientProvider>
+    </NextUIProvider>
   );
 }

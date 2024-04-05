@@ -14,6 +14,7 @@ async function request<T = unknown>(endpoint: RelativeUrl) {
 
   return data as T;
 }
+
 export function getAllPokemon(limit?: number): Promise<Pokemon[]> {
   if (limit) {
     return request(`/pokemon/limit/${limit}`);
