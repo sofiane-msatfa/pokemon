@@ -4,6 +4,7 @@ import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Input, Select, SelectItem, CheckboxGroup, Checkbox } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
 import { pokemonTypeArray } from "@/utils/pokemon";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 function cleanPokemonName(name: string) {
   return name
@@ -15,8 +16,7 @@ function cleanPokemonName(name: string) {
 
 interface PokemonFilters {
   types: string[];
-  pokedex: boolean;
-  likes: boolean;
+  pokedex: "all" | "in" | "not-in";
 }
 
 export function Pokemon() {
@@ -24,18 +24,30 @@ export function Pokemon() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
+  const [localStorageData] = useLocalStorage<number[]>('pokedex', [])
 
   const [pokemonFilters, setpokemonFilters] = useState<PokemonFilters>({
     types: [],
-    pokedex: false,
-    likes: false,
+    pokedex: 'all',
   });
 
-  const pokemonFilteredByType = pokemons.filter((pokemon) => {
+  const pokemonFilteredByPokedex = pokemons.filter((pokemon) => {
+    switch (pokemonFilters.pokedex.toLocaleLowerCase()) {
+      case 'in':
+        return localStorageData.includes(pokemon.id)
+      case 'not-in':
+        console.log('ok')
+        return !localStorageData.includes(pokemon.id)
+      default: return true
+    }
+  });
+
+  const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
 
     if (pokemonFilters.types.length === 0) {
       return true;
     }
+
     return pokemon.apiTypes.some((type) =>
       pokemonFilters.types.includes(type.name.toLowerCase())
     );
@@ -107,6 +119,27 @@ export function Pokemon() {
               {pokemonType}
             </SelectItem>
           ))}
+        </Select>
+        <Select
+          value={pageSize}
+          label="Pokedex"
+          className="w-1/2 sm:w-full"
+          selectionMode="single"
+          color="default"
+          onChange={(e) => {
+            const selectedValue = e.target.value as 'in' | 'not-in' | 'all';
+            setpokemonFilters({ ...pokemonFilters, pokedex: selectedValue });
+          }}
+        >
+          <SelectItem key={"all"} value="all">
+            all
+          </SelectItem>
+          <SelectItem key={"not-in"} value="not-in">
+            Not in
+          </SelectItem>
+          <SelectItem key={"in"} value="in">
+            In
+          </SelectItem>
         </Select>
       </div>
       <div className="flex justify-center w-full">
