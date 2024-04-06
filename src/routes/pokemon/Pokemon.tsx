@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState, Profiler } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
-import { Pagination, Input, Select, SelectItem, CheckboxGroup, Checkbox } from "@nextui-org/react";
+import { Pagination, Input, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
 import { cleanPokemonName, pokemonTypeArray } from "@/utils/pokemon";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
