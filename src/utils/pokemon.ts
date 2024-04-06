@@ -60,4 +60,18 @@ export const pokemonTypeArray = [
   "dragon",
   "ténèbres",
   "acier",
+  "combat",
+  "fée",
+  "poison",
+  "sol",
+  "vol"
 ]
+
+
+export function cleanPokemonName(name: string) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s/g, "")
+    .toLowerCase();
+}

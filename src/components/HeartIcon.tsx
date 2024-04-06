@@ -3,9 +3,12 @@ interface HeartIconProps {
   size?: number;
   height?: number;
   width?: number;
+  isSelected?: boolean;
+  isIndeterminate?: any,
+  disableAnimation?: any
 }
 
-export const HeartIcon = ({ filled, size, height, width, ...props }: HeartIconProps) => {
+export const HeartIcon = ({ filled, size, height, width, isSelected,isIndeterminate,disableAnimation, ...props }: HeartIconProps) => {
   return (
     <svg
       width={size || width || 24}
