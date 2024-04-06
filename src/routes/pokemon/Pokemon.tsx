@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Input, Select, SelectItem, CheckboxGroup, Checkbox } from "@nextui-org/react";
@@ -23,16 +23,19 @@ export function Pokemon() {
     pokedex: 'all',
   });
 
-  const pokemonFilteredByPokedex = pokemons.filter((pokemon) => {
-    switch (pokemonFilters.pokedex.toLocaleLowerCase()) {
-      case 'in':
-        return localStorageData.includes(pokemon.id)
-      case 'not-in':
-        return !localStorageData.includes(pokemon.id)
-      default:
-        return true
-    }
-  });
+  const pokemonFilteredByPokedex = useMemo(() => {
+    return pokemons.filter((pokemon) => {
+      const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
+      switch (pokedexType) {
+        case 'in':
+          return localStorageData.includes(pokemon.id);
+        case 'not-in':
+          return !localStorageData.includes(pokemon.id);
+        default:
+          return true;
+      }
+    });
+  }, [pokemons, pokemonFilters, localStorageData]);
 
   const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
 
