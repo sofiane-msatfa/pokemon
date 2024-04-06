@@ -36,19 +36,19 @@ export function Pokedex() {
   return (
     <div className="p-4">
       <h1 className="text-4xl font-bold text-center">Pokedex</h1>
-      <Input
-        label="Chercher un Pokémon favori"
-        type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 w-1/2"
-      />
-      <div className="flex justify-center mt-4">
+      <div className="gap-4 flex flex-col sm:flex-row items-center justify-start my-4">
+        <Input
+          label="Chercher un Pokémon favori"
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="mb-4 w-1/2"
+        />
         <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={resetPokedex}>
           Reset Pokedex
         </button>
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {paginatedPokemons.map((pokemon) => (
           <PokemonCard key={pokemon.id} pokemon={pokemon} />
         ))}

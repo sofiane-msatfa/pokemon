@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Profiler } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Input, Select, SelectItem, CheckboxGroup, Checkbox } from "@nextui-org/react";
@@ -23,7 +23,7 @@ export function Pokemon() {
     pokedex: 'all',
   });
 
-  const pokemonFilteredByPokedex = useMemo(() => {
+  const pokemonFilteredByPokedexWithMemo = useMemo(() => {
     return pokemons.filter((pokemon) => {
       const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
       switch (pokedexType) {
@@ -32,12 +32,13 @@ export function Pokemon() {
         case 'not-in':
           return !localStorageData.includes(pokemon.id);
         default:
+          console.log('with')
           return true;
       }
     });
   }, [pokemons, pokemonFilters, localStorageData]);
 
-  const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
+  const pokemonFilteredByType = pokemonFilteredByPokedexWithMemo.filter((pokemon) => {
 
     if (pokemonFilters.types.length === 0) {
       return true;
@@ -151,7 +152,7 @@ export function Pokemon() {
         </Select>
       </div>
       <div className="flex justify-center w-full">
-        <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {paginatedPokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
           ))}
