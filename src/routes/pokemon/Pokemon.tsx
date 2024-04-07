@@ -5,6 +5,7 @@ import { Pagination, Input, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
 import { cleanPokemonName, pokemonTypeArray } from "@/utils/pokemon";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useOnWindowResize, useOnWindowScroll } from "@/hooks/hooks";
 
 interface PokemonFilters {
   types: string[];
@@ -23,7 +24,42 @@ export function Pokemon() {
     pokedex: 'all',
   });
 
-  const pokemonFilteredByPokedexWithMemo = useMemo(() => {
+
+
+
+// const pokemonFilteredByPokedex =  pokemons.filter((pokemon) => {
+//   console.log('Pokedex filter')
+//     const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
+//     switch (pokedexType) {
+//       case 'in':
+//         return localStorageData.includes(pokemon.id);
+//       case 'not-in':
+//         return !localStorageData.includes(pokemon.id);
+//       default:
+//         return true;
+//     }
+//   });
+
+// const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
+//   console.log('type filter')
+//     if (pokemonFilters.types.length === 0) {
+//       return true;
+//     }
+//     return pokemon.apiTypes.some((type) =>
+//       pokemonFilters.types.includes(type.name.toLowerCase())
+//     );
+//   });
+
+// const pokemonFilteredByName = pokemonFilteredByType.filter((pokemon) => {
+//   console.log('filter name')
+
+//     const cleanPokemon = cleanPokemonName(pokemon.name);
+//     return cleanPokemon.includes(search.toLowerCase());
+//   });
+
+
+  const pokemonFilteredByPokedex = useMemo(() => {
+    console.log('Pokedex filter')
     return pokemons.filter((pokemon) => {
       const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
       switch (pokedexType) {
@@ -37,21 +73,25 @@ export function Pokemon() {
     });
   }, [pokemons, pokemonFilters, localStorageData]);
 
-  const pokemonFilteredByType = pokemonFilteredByPokedexWithMemo.filter((pokemon) => {
+  const pokemonFilteredByType = useMemo(() => {
+    console.log('Pokedex filter')
+    return pokemonFilteredByPokedex.filter((pokemon) => {
+      if (pokemonFilters.types.length === 0) {
+        return true;
+      }
+      return pokemon.apiTypes.some((type) =>
+        pokemonFilters.types.includes(type.name.toLowerCase())
+      );
+    });
+  }, [pokemonFilteredByPokedex, pokemonFilters.types]);
 
-    if (pokemonFilters.types.length === 0) {
-      return true;
-    }
-
-    return pokemon.apiTypes.some((type) =>
-      pokemonFilters.types.includes(type.name.toLowerCase())
-    );
-  });
-
-  const pokemonFilteredByName = pokemonFilteredByType.filter((pokemon) => {
-    const cleanPokemon = cleanPokemonName(pokemon.name);
-    return cleanPokemon.includes(search.toLowerCase());
-  });
+  const pokemonFilteredByName = useMemo(() => {
+    console.log('filter name')
+    return pokemonFilteredByType.filter((pokemon) => {
+      const cleanPokemon = cleanPokemonName(pokemon.name);
+      return cleanPokemon.includes(search.toLowerCase());
+    });
+  }, [pokemonFilteredByType, search]);
 
   const paginatedPokemons = pokemonFilteredByName.slice((page - 1) * pageSize, page * pageSize);
 
@@ -80,6 +120,7 @@ export function Pokemon() {
       types: types
     })
   }
+
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold my-4">Element catalogue</h1>
