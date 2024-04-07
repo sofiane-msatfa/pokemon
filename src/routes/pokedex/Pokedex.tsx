@@ -4,14 +4,7 @@ import { getPokemonQuery } from "../pokemon/Pokemon.queries";
 import { PokemonCard } from "@/components/PokemonCard";
 import { Input, Pagination } from "@nextui-org/react";
 import { useState } from "react";
-
-function cleanPokemonName(name: string) {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s/g, "")
-    .toLowerCase();
-}
+import { cleanPokemonName } from "@/utils/pokemon";
 
 export function Pokedex() {
   const [page, setPage] = useState(1);

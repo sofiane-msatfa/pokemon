@@ -1,10 +1,8 @@
 import { Button, Card, CardBody, CardFooter, Chip, Image, Checkbox, Tabs, Tab } from "@nextui-org/react";
 import {
   Modal, 
-  ModalContent, 
-  ModalHeader, 
+  ModalContent,  
   ModalBody, 
-  ModalFooter
 } from "@nextui-org/react";
 import { Pokemon } from "@/types";
 import { getBackgroundColor } from "@/utils/pokemon";
@@ -175,3 +173,15 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
     </>
   );
 }
+
+/**
+ * 
+ * Explication IndexDB
+ * 
+ * Mise en cache 
+ * 
+ * UseMemo 
+ * 
+ * Component
+ * 
+ */
