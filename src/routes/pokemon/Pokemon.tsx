@@ -4,8 +4,8 @@ import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Input, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
 import { cleanPokemonName, pokemonTypeArray } from "@/utils/pokemon";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { useOnWindowResize, useOnWindowScroll } from "@/hooks/hooks";
+import { usePokedex } from "@/hooks/usePokedex";
+
 
 interface PokemonFilters {
   types: string[];
@@ -17,7 +17,7 @@ export function Pokemon() {
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
-  const [localStorageData] = useLocalStorage<number[]>('pokedex', [])
+  const { pokemonIdList } = usePokedex();
   const [prevPage, setPrevPage] = useState(1)
   const [pokemonFilters, setpokemonFilters] = useState<PokemonFilters>({
     types: [],
@@ -32,9 +32,9 @@ export function Pokemon() {
 //     const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
 //     switch (pokedexType) {
 //       case 'in':
-//         return localStorageData.includes(pokemon.id);
+//         return pokemonIdList.includes(pokemon.id);
 //       case 'not-in':
-//         return !localStorageData.includes(pokemon.id);
+//         return !pokemonIdList.includes(pokemon.id);
 //       default:
 //         return true;
 //     }
@@ -64,14 +64,14 @@ export function Pokemon() {
       const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
       switch (pokedexType) {
         case 'in':
-          return localStorageData.includes(pokemon.id);
+          return pokemonIdList.includes(pokemon.id);
         case 'not-in':
-          return !localStorageData.includes(pokemon.id);
+          return !pokemonIdList.includes(pokemon.id);
         default:
           return true;
       }
     });
-  }, [pokemons, pokemonFilters, localStorageData]);
+  }, [pokemons, pokemonFilters, pokemonIdList]);
 
   const pokemonFilteredByType = useMemo(() => {
     console.log('Pokedex filter')
