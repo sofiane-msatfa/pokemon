@@ -1,18 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
-import { Pagination, Input, Select, SelectItem, CheckboxGroup, Checkbox } from "@nextui-org/react";
+import { Pagination, Input, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
-import { pokemonTypeArray } from "@/utils/pokemon";
+import { cleanPokemonName, pokemonTypeArray } from "@/utils/pokemon";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-
-function cleanPokemonName(name: string) {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s/g, "")
-    .toLowerCase();
-}
 
 interface PokemonFilters {
   types: string[];
@@ -25,24 +17,28 @@ export function Pokemon() {
   const [search, setSearch] = useState("");
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
   const [localStorageData] = useLocalStorage<number[]>('pokedex', [])
-
+  const [prevPage, setPrevPage] = useState(1)
   const [pokemonFilters, setpokemonFilters] = useState<PokemonFilters>({
     types: [],
     pokedex: 'all',
   });
 
-  const pokemonFilteredByPokedex = pokemons.filter((pokemon) => {
-    switch (pokemonFilters.pokedex.toLocaleLowerCase()) {
-      case 'in':
-        return localStorageData.includes(pokemon.id)
-      case 'not-in':
-        console.log('ok')
-        return !localStorageData.includes(pokemon.id)
-      default: return true
-    }
-  });
+  const pokemonFilteredByPokedexWithMemo = useMemo(() => {
+    return pokemons.filter((pokemon) => {
+      const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
+      switch (pokedexType) {
+        case 'in':
+          return localStorageData.includes(pokemon.id);
+        case 'not-in':
+          return !localStorageData.includes(pokemon.id);
+        default:
+          console.log('with')
+          return true;
+      }
+    });
+  }, [pokemons, pokemonFilters, localStorageData]);
 
-  const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
+  const pokemonFilteredByType = pokemonFilteredByPokedexWithMemo.filter((pokemon) => {
 
     if (pokemonFilters.types.length === 0) {
       return true;
@@ -61,6 +57,19 @@ export function Pokemon() {
   const paginatedPokemons = pokemonFilteredByName.slice((page - 1) * pageSize, page * pageSize);
 
   const totalPages = Math.ceil(pokemonFilteredByName.length / pageSize);
+
+  useEffect(() => {
+
+    if (totalPages === 1) {
+      return setPage(totalPages)
+    }
+
+    if (search === '' && prevPage !== page) {
+      console.log(prevPage)
+      setPage(prevPage)
+    }
+
+  }, [totalPages, search])
 
   function handleSetpokemonFilters(event: React.ChangeEvent<HTMLSelectElement>) {
     let types = event.target.value.split(',');
@@ -143,7 +152,7 @@ export function Pokemon() {
         </Select>
       </div>
       <div className="flex justify-center w-full">
-        <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="gap-2 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {paginatedPokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
           ))}
@@ -154,7 +163,10 @@ export function Pokemon() {
         total={totalPages}
         initialPage={1}
         showControls
-        onChange={(page) => setPage(page)}
+        onChange={(page) => {
+          setPage(page)
+          setPrevPage(page)
+        }}
         className="my-4"
       />
     </div>
