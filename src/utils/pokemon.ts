@@ -62,7 +62,6 @@ export const pokemonTypeArray = [
   "acier",
   "combat",
   "fée",
-  "poison",
   "sol",
   "vol"
 ]

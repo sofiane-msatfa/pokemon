@@ -32,7 +32,6 @@ export function Pokemon() {
         case 'not-in':
           return !localStorageData.includes(pokemon.id);
         default:
-          console.log('with')
           return true;
       }
     });
@@ -65,7 +64,6 @@ export function Pokemon() {
     }
 
     if (search === '' && prevPage !== page) {
-      console.log(prevPage)
       setPage(prevPage)
     }
 
@@ -82,7 +80,6 @@ export function Pokemon() {
       types: types
     })
   }
-
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold my-4">Element catalogue</h1>

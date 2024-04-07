@@ -104,7 +104,6 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
   
         <Modal className="pokeball-modal" isOpen={showModal} onOpenChange={setShowModal}>
           <ModalContent>
-            {(onClose) => (
               <>
                 <ModalBody className="flex flex-col items-center">
                   <Image
@@ -116,16 +115,6 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
                     width={300}
                   />
                   <h2 className="text-5xl text-gray-500">{pokemon.name}</h2>
-                  {/* <div className="flex">
-                    {pokemon.apiTypes.map((type, index) => (
-                      <Chip
-                        key={index}
-                        className={`text-white font-bold text-tiny mr-1 ${getBackgroundColor([type])}`}
-                      >
-                        {type.name}
-                      </Chip>
-                    ))}
-                  </div> */}
                   <div className="flex">
                     {pokemon.apiTypes.map((type, index) => (
                       <div
@@ -139,14 +128,10 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
                     ))}
                   </div>
 
-                  <p className="text-7xl text-gray-500 italic absolute top-5 right-5">#{pokemon.pokedexId}</p>
+                  <p className="text-7xl text-gray-500 italic absolute top-6 right-6 overflow-hidden">#{pokemon.pokedexId}</p>
                   <Tabs className="w-full flex-1 override-flex">
                   <Tab title="Infos" className="flex-1 text-center">
                 <div>
-                  <p>Description: {pokemon.description}</p>
-                  <p>Taille: {pokemon.height} m</p>
-                  <p>Poids: {pokemon.weight} kg</p>
-                  <p>Cri :</p>
                   <audio controls>
                   <source src={`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemon.id}.ogg`} type="audio/ogg" />                 
                   </audio>
@@ -182,13 +167,7 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
                 </Tab>
                   </Tabs>
                 </ModalBody>
-                <ModalFooter>
-                  {/* <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button> */}
-                </ModalFooter>
               </>
-            )}
           </ModalContent>
         </Modal>
         
