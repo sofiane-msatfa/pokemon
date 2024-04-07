@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   Navbar,
   NavbarBrand,
@@ -7,13 +9,14 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
-import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
 
 export function RootLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const menuItems = ["Accueil", "Pokedex"];
+  const location = useLocation();
+  const menuItems = [
+    { name: "Accueil", path: "/" },
+    { name: "Pokedex", path: "/pokedex" },
+  ];
 
   return (
     <>
@@ -30,28 +33,29 @@ export function RootLayout() {
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" to="/">
-              Accueil
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link to="/pokedex" aria-current="page">
-              Pokedex
-            </Link>
-          </NavbarItem>
+          {menuItems.map((menuItem) => (
+            <NavbarItem key={menuItem.path} isActive={location.pathname === menuItem.path}>
+              <Link to={menuItem.path} color="foreground">
+                {menuItem.name}
+              </Link>
+            </NavbarItem>
+          ))}
         </NavbarContent>
+
         <NavbarMenu>
-          {menuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
+          {menuItems.map((menuItem, index) => (
+            <NavbarMenuItem key={menuItem.path}>
               <Link
+                to={menuItem.path}
                 color={
-                  index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
+                  location.pathname === menuItem.path
+                    ? "danger"
+                    : index === 0
+                    ? "foreground"
+                    : "primary"
                 }
-                className="w-full"
-                to="#"
               >
-                {item}
+                {menuItem.name}
               </Link>
             </NavbarMenuItem>
           ))}
