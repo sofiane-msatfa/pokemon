@@ -28,7 +28,7 @@ export function RootLayout() {
           />
           <NavbarBrand>
             {/* <AcmeLogo /> */}
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">Pokemon</p>
           </NavbarBrand>
         </NavbarContent>
 
@@ -61,7 +61,7 @@ export function RootLayout() {
           ))}
         </NavbarMenu>
       </Navbar>
-      <main className="container mx-auto">
+      <main className="max-w-screen-xl mx-auto">
         <Outlet />
       </main>
     </>
