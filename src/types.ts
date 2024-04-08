@@ -71,3 +71,38 @@ export enum PokemonType {
   Ténèbres = "Ténèbres",
   Fée = "Fée",
 }
+
+export interface PokemonCardVariant {
+  normal: boolean;
+  reverse: boolean;
+  holo: boolean;
+  firstEdition: boolean;
+}
+
+export interface PokemonCard {
+  id: string;
+  localId: string | number;
+  name: string;
+  image: string;
+  category: "Énergie" | "Pokémon" | "Dresseur";
+  illustrator: string;
+  rarity: string;
+  variants: PokemonCardVariant;
+  set: PokemonCardSet;
+  dexId: number[];
+  hp: number;
+  types: string[];
+  evolveFrom: string;
+  description: string;
+  stage: string;
+}
+export interface PokemonCardSet {
+  id: string;
+  name: string;
+  logo: string;
+  symbol: string;
+  cardCount: {
+    total: number;
+    official: number;
+  };
+}

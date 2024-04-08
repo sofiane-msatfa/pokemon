@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Select, SelectItem } from "@nextui-org/react";
@@ -18,6 +18,10 @@ export function Pokemon() {
   const filteredPokemons = applyFilters(pokemons);
   const paginatedPokemons = paginate(filteredPokemons, page, pageSize);
   const totalPages = Math.ceil(filteredPokemons.length / pageSize);
+
+  useEffect(() => {
+    if(totalPages < page) setPage(1);
+  }, [totalPages, page]);
 
   const debounceSearch = useDebounceFn(setSearch, 300);
 
@@ -90,6 +94,7 @@ export function Pokemon() {
       <Pagination
         total={totalPages}
         initialPage={1}
+        page={page}
         showControls
         className="my-4"
         onChange={(page) => setPage(page)}

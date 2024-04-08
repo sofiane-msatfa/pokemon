@@ -1,40 +1,17 @@
-import type { Pokemon } from "@/types";
+import type { Pokemon, PokemonCard } from "@/types";
 
-type RelativeUrl = `/${string}`;
-
-async function request<T = unknown>(endpoint: RelativeUrl) {
-  const baseUrl = "https://pokebuildapi.fr/api/v1";
-  const url = `${baseUrl}${endpoint}`;
-
-  const response = await fetch(url, {
+export async function getAllPokemon(): Promise<Pokemon[]> {
+  const response = await fetch("https://pokebuildapi.fr/api/v1/pokemon", {
     headers: { "Content-Type": "application/json" },
   });
 
-  const data = await response.json();
-
-  return data as T;
+  return response.json();
 }
 
-export function getAllPokemon(limit?: number): Promise<Pokemon[]> {
-  if (limit) {
-    return request(`/pokemon/limit/${limit}`);
-  }
+export async function getPokemonCard(name: string): Promise<PokemonCard> {
+  const response = await fetch(`https://api.tcgdex.net/v2/fr/cards/${name}`, {
+    headers: { "Content-Type": "application/json" },
+  });
 
-  return request("/pokemon");
-}
-
-export async function getPokemonById(id: number): Promise<Pokemon> {
-  return request<Pokemon>(`/pokemon/${id}`);
-}
-
-export async function getPokemonByName(name: string): Promise<Pokemon> {
-  return request<Pokemon>(`/pokemon/${name}`);
-}
-
-export async function getAllPokemonFromGeneration(generation: number): Promise<Pokemon[]> {
-  return request(`/pokemon/generation/${generation}`);
-}
-
-export async function getAllPokemonByType(type: string): Promise<Pokemon[]> {
-  return request(`/pokemon/type/${type}`);
+  return response.json();
 }

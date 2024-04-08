@@ -31,7 +31,7 @@ export function Pokedex() {
 
   const filteredPokemons = getFilteredPokemons();
   const paginatedPokemons = paginate(filteredPokemons, page, PAGE_SIZE);
-  const totalPages = Math.ceil(pokemonList.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filteredPokemons.length / PAGE_SIZE);
 
   const debounceSearch = useDebounceFn(setSearch, 100);
 

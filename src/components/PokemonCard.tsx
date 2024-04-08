@@ -1,15 +1,19 @@
-import { Button, Card, CardBody, CardFooter, Chip, Image, Checkbox, Tabs, Tab } from "@nextui-org/react";
 import {
-  Modal, 
-  ModalContent,  
-  ModalBody, 
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Chip,
+  Image,
+  Checkbox,
+  useDisclosure,
 } from "@nextui-org/react";
 import { Pokemon } from "@/types";
 import { getBackgroundColor } from "@/utils/pokemon";
 import { usePokedex } from "@/hooks/usePokedex";
 import { HeartIcon } from "./HeartIcon";
-import { useState } from "react";
-import '@/index.css';
+import { PokemonModal } from "./PokemonModal";
+import { PokemonCardPreview } from "./PokemonCardPreview";
 
 interface PokemonCardProps {
   pokemon: Pokemon;
@@ -17,6 +21,17 @@ interface PokemonCardProps {
 
 export function PokemonCard({ pokemon }: PokemonCardProps) {
   const { pokedex, addPokemonToPokedex, removePokemonFromPokedex } = usePokedex();
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onOpenChange: onModalOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isPreviewOpen,
+    onOpen: onPreviewOpen,
+    onOpenChange: onPreviewOpenChange,
+  } = useDisclosure();
 
   const isPokemonInPokedex = pokedex.includes(pokemon.id);
   const bgColor = getBackgroundColor(pokemon.apiTypes);
@@ -28,9 +43,6 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
 
     addPokemonToPokedex(pokemon.id);
   };
-
-  const [showModal, setShowModal] = useState(false);
-
 
   return (
     <>
@@ -76,7 +88,8 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
               color="default"
               radius="lg"
               size="sm"
-              onClick={() => setShowModal(true)}
+              onClick={onModalOpen}
+              // onClick={onPreviewOpen}
             >
               Voir
             </Button>
@@ -91,90 +104,13 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
         </CardFooter>
       </Card>
 
-      {showModal && (
-  
-        <Modal className="pokeball-modal" isOpen={showModal} onOpenChange={setShowModal}>
-          <ModalContent>
-              <>
-                <ModalBody className="flex flex-col items-center">
-                  <Image
-                    fallbackSrc=""
-                    alt={pokemon.name}
-                    className="object-cover mt-6"
-                    height={300}
-                    src={pokemon.image}
-                    width={300}
-                  />
-                  <h2 className="text-5xl text-gray-500">{pokemon.name}</h2>
-                  <div className="flex">
-                    {pokemon.apiTypes.map((type, index) => (
-                      <div
-                        key={index}
-                        className={` flex type text-white font-bold text-sm py-1 px-2 rounded-full mr-1 ${getBackgroundColor([type])}`}
-                        style={{ backgroundColor: getBackgroundColor([type]) }}
-                      >
-                        <img src={type.image} width="20" height="20" alt={type.name} className="mr-1" />
-                        <span>{type.name}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <p className="text-7xl text-gray-500 italic absolute top-6 right-6 overflow-hidden">#{pokemon.pokedexId}</p>
-                  <Tabs className="w-full flex-1 override-flex">
-                  <Tab title="Infos" className="flex-1 text-center">
-                <div>
-                  <audio controls>
-                  <source src={`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemon.id}.ogg`} type="audio/ogg" />                 
-                  </audio>
-                </div>
-              </Tab>
-                  <Tab title="Statistiques" className="flex-1 text-center">
-                  <div>
-                    <p>HP: {pokemon.stats.HP}</p>
-                    <progress value={pokemon.stats.HP} max="150" style={{backgroundColor: bgColor}}></progress>
-                  </div>
-                  <div>
-                    <p>Attack: {pokemon.stats.attack}</p>
-                    <progress value={pokemon.stats.attack} max="150" style={{backgroundColor: bgColor}}></progress>
-                  </div>
-                  <div>
-                    <p>Défense: {pokemon.stats.defense}</p>
-                    <progress value={pokemon.stats.defense} max="150" style={{backgroundColor: bgColor}}></progress>
-                  </div>
-                  <div>
-                    <p>Speed: {pokemon.stats.speed}</p>
-                    <progress value={pokemon.stats.speed} max="150" style={{backgroundColor: bgColor}}></progress>
-                  </div>
-                </Tab>
-
-                <Tab title="Évolution" className="flex-1 text-center">
-                  {pokemon.apiEvolutions.map((evolution, index) => (
-                    <div key={index}>
-                      <p>{evolution.name}</p>
-                      <img src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evolution.pokedexId}.png`} alt={evolution.name} />
-                      <p>#{evolution.pokedexId}</p>
-                    </div>
-                  ))}
-                </Tab>
-                  </Tabs>
-                </ModalBody>
-              </>
-          </ModalContent>
-        </Modal>
-        
-      )}
+      <PokemonModal pokemon={pokemon} isOpen={isModalOpen} onOpenChange={onModalOpenChange} />
+      <PokemonCardPreview
+        pokemon={pokemon}
+        isOpen={isPreviewOpen}
+        onOpenChange={onPreviewOpenChange}
+      />
     </>
   );
 }
 
-/**
- * 
- * Explication IndexDB
- * 
- * Mise en cache 
- * 
- * UseMemo 
- * 
- * Component
- * 
- */

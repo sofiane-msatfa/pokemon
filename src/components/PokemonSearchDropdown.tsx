@@ -28,7 +28,7 @@ export function PokemonSearchDropdown({ pokemons, onSearch }: PokemonSearchDropd
   const handleSelection = (id: number) => {
     const pokemon = pokemons.find((pokemon) => pokemon.id === id);
     pokemon && onSearch(pokemon.name);
-  }
+  };
 
   return (
     <Autocomplete
@@ -41,16 +41,16 @@ export function PokemonSearchDropdown({ pokemons, onSearch }: PokemonSearchDropd
       className="max-w-xs"
       onSelectionChange={(id) => handleSelection(id as number)}
       onInputChange={(value) => onSearch(value)}
+      allowsCustomValue={true}
+      listboxProps={{
+        emptyContent: "Aucun résultat.",
+        
+      }}
     >
       {(pokemon) => (
         <AutocompleteItem key={pokemon.id} textValue={pokemon.name}>
           <div className="flex gap-2 items-center">
-            <Avatar
-              alt={pokemon.name}
-              className="flex-shrink-0"
-              size="sm"
-              src={pokemon.sprite}
-            />
+            <Avatar alt={pokemon.name} className="flex-shrink-0" size="sm" src={pokemon.sprite} />
             <span className="text-small">{pokemon.name}</span>
           </div>
         </AutocompleteItem>
