@@ -3,13 +3,14 @@ import { RootLayout } from "./Root.layout";
 import { PokemonLayout } from "./pokemon/Pokemon.layout";
 import { Pokemon } from "./pokemon/Pokemon";
 import { Pokedex } from "./pokedex/Pokedex";
+import { pokemonLoader } from "./pokemon/Pokemon.loader";
 
 export function createRouter() {
   return createBrowserRouter(
     createRoutesFromElements(
       <Route element={<RootLayout />}>
         <Route element={<PokemonLayout />}>
-          <Route index element={<Pokemon />} />
+          <Route index element={<Pokemon />} loader={pokemonLoader} />
           <Route path="/pokedex" element={<Pokedex />} />
         </Route>
         <Route path="pokedex" element={<Pokedex />} />
