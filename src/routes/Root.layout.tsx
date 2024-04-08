@@ -10,6 +10,8 @@ import {
   NavbarMenuToggle,
 } from "@nextui-org/react";
 
+import PokemonLogo from "/pokemon.svg";
+
 export function RootLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
@@ -27,8 +29,9 @@ export function RootLayout() {
             className="sm:hidden"
           />
           <NavbarBrand>
-            {/* <AcmeLogo /> */}
-            <p className="font-bold text-inherit">Pokemon</p>
+            <Link to="/">
+              <img src={PokemonLogo} className="h-24 w-32" alt="Vite logo" />
+            </Link>
           </NavbarBrand>
         </NavbarContent>
 

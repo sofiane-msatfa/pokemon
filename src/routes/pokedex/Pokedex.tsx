@@ -38,7 +38,7 @@ export function Pokedex() {
   return (
     <div className="p-4">
       <h1 className="text-4xl font-bold text-center">Pokedex</h1>
-      <div className="gap-4 flex flex-col sm:flex-row items-center justify-start my-4">
+      <div className="gap-4 flex flex-col sm:flex-row items-end justify-start my-4">
         <PokemonSearchDropdown pokemons={pokemons} onSearch={debounceSearch} />
         <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={resetPokedex}>
           Reset Pokedex

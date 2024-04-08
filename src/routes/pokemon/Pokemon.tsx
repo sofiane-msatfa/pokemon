@@ -9,9 +9,11 @@ import { PokemonType } from "@/types";
 import { useDebounceFn } from "@/hooks/useDebounceFn";
 import { PokemonSearchDropdown } from "@/components/PokemonSearchDropdown";
 
+const pageSizeOptions = [8, 16, 24, 48];
+
 export function Pokemon() {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
   const { filters, setSearch, setPokemonTypes, setPokedexView, applyFilters } = useFilters();
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
 
@@ -38,21 +40,17 @@ export function Pokemon() {
         <PokemonSearchDropdown pokemons={pokemons} onSearch={debounceSearch} />
         <Select
           value={pageSize}
-          label="Sélectionner le nombre d'éléments à afficher"
+          label="Eléments par page"
           className="w-1/2 sm:w-full"
           selectionMode="single"
           color="default"
           onChange={(e) => setPageSize(Number(e.target.value))}
         >
-          <SelectItem key={10} value="10">
-            10
-          </SelectItem>
-          <SelectItem key={20} value="20">
-            20
-          </SelectItem>
-          <SelectItem key={50} value="50">
-            50
-          </SelectItem>
+          {pageSizeOptions.map((size) => (
+            <SelectItem key={size} value={size}>
+              {size}
+            </SelectItem>
+          ))}
         </Select>
         <Select
           label="Choisissez un type de Pokémon"
