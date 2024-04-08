@@ -113,4 +113,3 @@ export function PokemonModal({ pokemon, isOpen, onOpenChange }: PokemonModalProp
     </Modal>
   );
 }
-

@@ -1,17 +1,18 @@
+import { usePokedex } from "@/hooks/usePokedex";
+import { Pokemon } from "@/types";
+import { getPokemonBorderColorByType } from "@/utils/colors";
 import {
-  Button,
   Card,
+  CardHeader,
   CardBody,
+  Tooltip,
+  cn,
   CardFooter,
-  Chip,
-  Image,
-  Checkbox,
+  Button,
+  ButtonProps,
   useDisclosure,
 } from "@nextui-org/react";
-import { Pokemon } from "@/types";
-import { getBackgroundColor } from "@/utils/pokemon";
-import { usePokedex } from "@/hooks/usePokedex";
-import { HeartIcon } from "./HeartIcon";
+import { Eye, Heart, ListCollapse, LucideIcon } from "lucide-react";
 import { PokemonModal } from "./PokemonModal";
 import { PokemonCardPreview } from "./PokemonCardPreview";
 
@@ -19,22 +20,27 @@ interface PokemonCardProps {
   pokemon: Pokemon;
 }
 
+interface ToolbarButtonProps extends ButtonProps {
+  tooltip: string;
+  icon: LucideIcon;
+}
+
+function ToolbarButton({ tooltip, icon: Icon, ...props }: ToolbarButtonProps) {
+  return (
+    <Tooltip content={tooltip} delay={500}>
+      <Button size="sm" variant="faded" isIconOnly {...props}>
+        <Icon size={16} />
+      </Button>
+    </Tooltip>
+  );
+}
+
 export function PokemonCard({ pokemon }: PokemonCardProps) {
   const { pokedex, addPokemonToPokedex, removePokemonFromPokedex } = usePokedex();
-  const {
-    isOpen: isModalOpen,
-    onOpen: onModalOpen,
-    onOpenChange: onModalOpenChange,
-  } = useDisclosure();
-
-  const {
-    isOpen: isPreviewOpen,
-    onOpen: onPreviewOpen,
-    onOpenChange: onPreviewOpenChange,
-  } = useDisclosure();
+  const modal = useDisclosure();
+  const preview = useDisclosure();
 
   const isPokemonInPokedex = pokedex.includes(pokemon.id);
-  const bgColor = getBackgroundColor(pokemon.apiTypes);
 
   const togglePokemonFromPokedex = () => {
     if (isPokemonInPokedex) {
@@ -47,70 +53,72 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
   return (
     <>
       <Card
-        key={pokemon.id}
-        isFooterBlurred
-        radius="lg"
-        className={`border-none text-white max-w-[450px] h-[230px] items-center justify-start ${bgColor}`}
+        className={cn(
+          getPokemonBorderColorByType(pokemon),
+          "group py-4 px-2 border-4",
+          !isPokemonInPokedex && "border-stone-950",
+        )}
       >
-        <div className="flex items-center justify-between">
-          <Image
-            fallbackSrc=""
-            alt="Woman listing to music"
-            className="object-cover"
-            height={300}
-            src={`${pokemon.image}`}
-            width={300}
-          />
-          <CardBody>
-            <span>Pokdex ID : {pokemon.pokedexId}</span>
-            <span>HP : {pokemon.stats.HP}</span>
-            <span>Attack : {pokemon.stats.attack}</span>
-            <span>Défense : {pokemon.stats.defense}</span>
-            <span>Speed : {pokemon.stats.speed}</span>
-          </CardBody>
-        </div>
-        <CardFooter className="inline border-white/20 border-1 overflow-hidden absolute before:rounded-xl rounded-b-l bottom-1 h-[85px] w-[calc(100%_-_8px)] shadow-small z-5">
-          <p className="text-lg text-white/80 mb-">{pokemon.name}</p>
-          <div className="flex justify-between">
-            <div>
-              {pokemon.apiTypes.map((type, index) => (
-                <Chip
-                  key={index}
-                  className={`text-white font-bold text-tiny mr-1 ${getBackgroundColor([type])}`}
-                >
-                  {type.name}
-                </Chip>
-              ))}
+        <CardHeader className="pb-0 p-2 pt-0 flex-col items-start">
+          <div className="flex w-full justify-between items-start">
+            <div className="flex flex-col">
+              <p className="text-sm">#{pokemon.id}</p>
+              <h4 className="font-bold text-xl">{pokemon.name}</h4>
+              <small className="text-default-500">Generation {pokemon.apiGeneration}</small>
             </div>
-            <Button
-              className="text-tiny text-white bg-black/80"
-              variant="flat"
-              color="default"
-              radius="lg"
-              size="sm"
-              onClick={onModalOpen}
-              // onClick={onPreviewOpen}
-            >
-              Voir
-            </Button>
-            <Checkbox
-              defaultSelected
-              icon={<HeartIcon />}
-              isSelected={isPokemonInPokedex}
-              onValueChange={togglePokemonFromPokedex}
-              color="danger"
-            />
+            <div className="flex gap-1">
+              <ToolbarButton tooltip="Afficher la carte" icon={Eye} onClick={preview.onOpen} />
+              <ToolbarButton tooltip="Détails" icon={ListCollapse} onClick={modal.onOpen} />
+              <ToolbarButton
+                icon={Heart}
+                tooltip={isPokemonInPokedex ? "Retirer du Pokédex" : "Ajouter au Pokédex"}
+                onClick={togglePokemonFromPokedex}
+                className={cn(isPokemonInPokedex && "text-red-500 border-red-500 bg-red-50")}
+              />
+            </div>
+          </div>
+        </CardHeader>
+        <CardBody className="overflow-visible border-1 rounded-md p-0 blob-fill">
+          <img
+            loading="lazy"
+            className={cn(
+              "aspect-square rounded-md object-cover z-10",
+              "drop-shadow-2xl",
+              "transition-all duration-300 ease-in-out",
+              !isPokemonInPokedex &&
+                "grayscale group-hover:scale-105 group-hover:-translate-y-2 group-hover:grayscale-0",
+            )}
+            src={pokemon.image}
+            alt={pokemon.name}
+          />
+        </CardBody>
+        <CardFooter>
+          <div className="flex items-center space-x-2">
+            {pokemon.apiTypes.map((type) => (
+              <div key={type.name} className="flex items-center space-x-1">
+                <img
+                  loading="lazy"
+                  className={cn(
+                    "w-6 h-6",
+                    "transition-all duration-300 ease-in-out",
+                    !isPokemonInPokedex && "grayscale group-hover:grayscale-0",
+                  )}
+                  src={type.image}
+                  alt={type.name}
+                />
+                <span className="text-sm">{type.name}</span>
+              </div>
+            ))}
           </div>
         </CardFooter>
       </Card>
 
-      <PokemonModal pokemon={pokemon} isOpen={isModalOpen} onOpenChange={onModalOpenChange} />
+      <PokemonModal pokemon={pokemon} isOpen={modal.isOpen} onOpenChange={modal.onOpenChange} />
       <PokemonCardPreview
         pokemon={pokemon}
-        isOpen={isPreviewOpen}
-        onOpenChange={onPreviewOpenChange}
+        isOpen={preview.isOpen}
+        onOpenChange={preview.onOpenChange}
       />
     </>
   );
 }
-

@@ -43,12 +43,3 @@ export function getBackgroundColor(types: ApiType[]) {
 
   return "bg-gray-300";
 }
-
-
-export function cleanPokemonName(name: string) {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s/g, "")
-    .toLowerCase();
-}

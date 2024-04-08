@@ -61,6 +61,7 @@ export function RootLayout() {
           ))}
         </NavbarMenu>
       </Navbar>
+      <div className="bg-fixed pattern-polka" />
       <main className="max-w-screen-xl mx-auto">
         <Outlet />
       </main>

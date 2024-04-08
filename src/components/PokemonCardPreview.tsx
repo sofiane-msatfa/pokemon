@@ -61,4 +61,3 @@ export function PokemonCardPreview({ pokemon, isOpen, onOpenChange }: PokemonCar
     </Modal>
   );
 }
-

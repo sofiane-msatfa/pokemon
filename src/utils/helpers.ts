@@ -19,3 +19,14 @@ export function resolvePokemonCardImage(
   const { quality = "high", extension = "webp" } = opts ?? {};
   return `${url}/${quality}.${extension}`;
 }
+
+/** Returns a tuple with two arrays: one with items that pass the predicate, and one with items that don't. */
+export function partition<T>(array: T[], predicate: (item: T) => boolean): [T[], T[]] {
+  return array.reduce(
+    (acc, item) => {
+      acc[predicate(item) ? 0 : 1].push(item);
+      return acc;
+    },
+    [[], []] as [T[], T[]],
+  );
+}

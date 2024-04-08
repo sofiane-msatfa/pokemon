@@ -38,13 +38,12 @@ export function PokemonSearchDropdown({ pokemons, onSearch }: PokemonSearchDropd
       variant="bordered"
       placeholder="Rechercher un pokemon"
       labelPlacement="inside"
-      className="max-w-xs"
+      className="max-w-xs bg-white"
       onSelectionChange={(id) => handleSelection(id as number)}
       onInputChange={(value) => onSearch(value)}
       allowsCustomValue={true}
       listboxProps={{
         emptyContent: "Aucun résultat.",
-        
       }}
     >
       {(pokemon) => (
@@ -58,4 +57,3 @@ export function PokemonSearchDropdown({ pokemons, onSearch }: PokemonSearchDropd
     </Autocomplete>
   );
 }
-

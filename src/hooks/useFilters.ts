@@ -16,7 +16,7 @@ export const useFilters = () => {
     pokemonTypes: [],
     pokedexView: "all",
   });
-  
+
   const setSearch = (search: string) => {
     const cleanSearch = normalizeText(search);
     setFilters({ ...filters, search: cleanSearch });
@@ -57,4 +57,3 @@ export const useFilters = () => {
     applyFilters,
   };
 };
-

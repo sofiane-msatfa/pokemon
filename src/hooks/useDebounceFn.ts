@@ -21,4 +21,3 @@ export const useDebounceFn = <Args extends unknown[]>(
 
   return debouncedFunction;
 };
-

@@ -1,10 +1,10 @@
+import { useState } from "react";
 import { usePokedex } from "@/hooks/usePokedex";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "../pokemon/Pokemon.queries";
 import { PokemonSearchDropdown } from "@/components/PokemonSearchDropdown";
 import { PokemonCard } from "@/components/PokemonCard";
 import { Pagination } from "@nextui-org/react";
-import { useState } from "react";
 import { useFilters } from "@/hooks/useFilters";
 import { paginate } from "@/utils/helpers";
 import { useDebounceFn } from "@/hooks/useDebounceFn";
@@ -61,4 +61,3 @@ export function Pokedex() {
     </div>
   );
 }
-

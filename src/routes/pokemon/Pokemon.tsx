@@ -20,7 +20,7 @@ export function Pokemon() {
   const totalPages = Math.ceil(filteredPokemons.length / pageSize);
 
   useEffect(() => {
-    if(totalPages < page) setPage(1);
+    if (totalPages < page) setPage(1);
   }, [totalPages, page]);
 
   const debounceSearch = useDebounceFn(setSearch, 300);
@@ -33,7 +33,7 @@ export function Pokemon() {
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-bold my-4">Element catalogue</h1>
+      <h1 className="text-2xl font-bold my-4">Catalogue</h1>
       <div className="w-full flex flex-col sm:flex-row items-center justify-start gap-6 mb-4">
         <PokemonSearchDropdown pokemons={pokemons} onSearch={debounceSearch} />
         <Select
@@ -102,4 +102,3 @@ export function Pokemon() {
     </div>
   );
 }
-

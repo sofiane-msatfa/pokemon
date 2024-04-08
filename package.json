@@ -19,6 +19,7 @@
     "@tanstack/react-query-persist-client": "^5.28.14",
     "framer-motion": "^11.0.24",
     "localforage": "^1.10.0",
+    "lucide-react": "^0.365.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.13",
