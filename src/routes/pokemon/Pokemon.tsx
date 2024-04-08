@@ -4,7 +4,7 @@ import { getPokemonQuery } from "./Pokemon.queries";
 import { Pagination, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
 import { paginate } from "@/utils/helpers";
-import { useFilters } from "@/hooks/useFilters";
+import { useFilters, PokedexViewValues } from "@/hooks/useFilters";
 import { PokemonType } from "@/types";
 import { useDebounceFn } from "@/hooks/useDebounceFn";
 import { PokemonSearchDropdown } from "@/components/PokemonSearchDropdown";
@@ -40,20 +40,24 @@ export function Pokemon() {
         <PokemonSearchDropdown pokemons={pokemons} onSearch={debounceSearch} />
         <Select
           value={pageSize}
+          labelPlacement="outside"
           label="Eléments par page"
+          defaultSelectedKeys={[pageSize.toString()]}
           className="w-1/2 sm:w-full"
           selectionMode="single"
           color="default"
           onChange={(e) => setPageSize(Number(e.target.value))}
         >
           {pageSizeOptions.map((size) => (
-            <SelectItem key={size} value={size}>
+            <SelectItem key={size} value={size} textValue={size.toString()}>
               {size}
             </SelectItem>
           ))}
         </Select>
         <Select
-          label="Choisissez un type de Pokémon"
+          labelPlacement="outside"
+          label="Type de Pokémon"
+          placeholder=" "
           selectionMode="multiple"
           className="w-1/2 sm:w-full"
           value={filters.pokemonTypes}
@@ -68,17 +72,21 @@ export function Pokemon() {
         <Select
           value={pageSize}
           label="Pokedex"
+          labelPlacement="outside"
+          defaultSelectedKeys={[filters.pokedexView]}
           className="w-1/2 sm:w-full"
           selectionMode="single"
           color="default"
           onChange={(e) => {
-            const selectedValue = e.target.value as "all" | "inside" | "outside";
+            const selectedValue = e.target.value as PokedexViewValues;
             setPokedexView(selectedValue);
           }}
         >
-          <SelectItem key="all">all</SelectItem>
-          <SelectItem key="outside">Not in</SelectItem>
-          <SelectItem key="inside">In</SelectItem>
+          {Object.values(PokedexViewValues).map((view) => (
+            <SelectItem key={view} value={view}>
+              {view}
+            </SelectItem>
+          ))}
         </Select>
       </div>
       <div className="flex justify-center w-full">

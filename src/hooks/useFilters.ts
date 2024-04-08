@@ -3,10 +3,16 @@ import { usePokedex } from "./usePokedex";
 import { Pokemon, PokemonType } from "@/types";
 import { normalizeText } from "@/utils/helpers";
 
+export enum PokedexViewValues {
+  All = "Tous",
+  Inside = "Capturés",
+  Outside = "En liberté",
+}
+
 export interface FiltersProps {
   search: string;
   pokemonTypes: PokemonType[];
-  pokedexView: "all" | "inside" | "outside";
+  pokedexView: PokedexViewValues;
 }
 
 export const useFilters = () => {
@@ -14,7 +20,7 @@ export const useFilters = () => {
   const [filters, setFilters] = useState<FiltersProps>({
     search: "",
     pokemonTypes: [],
-    pokedexView: "all",
+    pokedexView: PokedexViewValues.All,
   });
 
   const setSearch = (search: string) => {
@@ -26,7 +32,7 @@ export const useFilters = () => {
     setFilters({ ...filters, pokemonTypes: types });
   };
 
-  const setPokedexView = (pokedexView: "all" | "inside" | "outside") => {
+  const setPokedexView = (pokedexView: PokedexViewValues) => {
     setFilters({ ...filters, pokedexView });
   };
 
@@ -38,9 +44,9 @@ export const useFilters = () => {
     });
 
     const pokemonFilteredByPokedex = pokemonFilteredByName.filter((pokemon) => {
-      if (filters.pokedexView === "all") return true;
-      if (filters.pokedexView === "inside") return pokedex.includes(pokemon.id);
-      if (filters.pokedexView === "outside") return !pokedex.includes(pokemon.id);
+      if (filters.pokedexView === PokedexViewValues.All) return true;
+      if (filters.pokedexView === PokedexViewValues.Inside) return pokedex.includes(pokemon.id);
+      if (filters.pokedexView === PokedexViewValues.Outside) return !pokedex.includes(pokemon.id);
     });
 
     return pokemonFilteredByPokedex.filter((pokemon) => {

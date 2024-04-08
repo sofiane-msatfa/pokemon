@@ -67,11 +67,11 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
               <small className="text-default-500">Generation {pokemon.apiGeneration}</small>
             </div>
             <div className="flex gap-1">
-              <ToolbarButton tooltip="Afficher la carte" icon={Eye} onClick={preview.onOpen} />
+              <ToolbarButton tooltip="Voir la carte" icon={Eye} onClick={preview.onOpen} />
               <ToolbarButton tooltip="Détails" icon={ListCollapse} onClick={modal.onOpen} />
               <ToolbarButton
                 icon={Heart}
-                tooltip={isPokemonInPokedex ? "Retirer du Pokédex" : "Ajouter au Pokédex"}
+                tooltip={isPokemonInPokedex ? "Libérer" : "Capturer"}
                 onClick={togglePokemonFromPokedex}
                 className={cn(isPokemonInPokedex && "text-red-500 border-red-500 bg-red-50")}
               />

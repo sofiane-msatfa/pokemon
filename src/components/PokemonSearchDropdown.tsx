@@ -36,7 +36,7 @@ export function PokemonSearchDropdown({ pokemons, onSearch }: PokemonSearchDropd
       scrollRef={scrollerRef}
       onOpenChange={setIsOpen}
       variant="bordered"
-      placeholder=" "
+      placeholder="Nom du pokémon..."
       labelPlacement="outside"
       label="Rechercher un pokemon"
       className="max-w-xs bg-white"
