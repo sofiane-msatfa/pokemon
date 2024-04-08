@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   Navbar,
@@ -51,8 +51,8 @@ export function RootLayout() {
                   location.pathname === menuItem.path
                     ? "danger"
                     : index === 0
-                    ? "foreground"
-                    : "primary"
+                      ? "foreground"
+                      : "primary"
                 }
               >
                 {menuItem.name}

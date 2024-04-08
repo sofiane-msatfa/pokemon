@@ -1,6 +1,6 @@
-import { ApiType, Type } from "@/types";
+import { ApiType, PokemonType } from "@/types";
 
-type ColorMap = Partial<Record<Type, string>>;
+type ColorMap = Partial<Record<PokemonType, string>>;
 
 export function getBackgroundColor(types: ApiType[]) {
   const mainColorMap: ColorMap = {
@@ -43,28 +43,6 @@ export function getBackgroundColor(types: ApiType[]) {
 
   return "bg-gray-300";
 }
-
-
-export const pokemonTypeArray = [
-  "normal",
-  "feu",
-  "eau",
-  "électrik",
-  "poison",
-  "plante",
-  "glace",
-  "psy",
-  "insecte",
-  "roche",
-  "spectre",
-  "dragon",
-  "ténèbres",
-  "acier",
-  "combat",
-  "fée",
-  "sol",
-  "vol"
-]
 
 
 export function cleanPokemonName(name: string) {

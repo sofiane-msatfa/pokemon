@@ -1,137 +1,37 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getPokemonQuery } from "./Pokemon.queries";
-import { Pagination, Input, Select, SelectItem } from "@nextui-org/react";
+import { Pagination, Select, SelectItem } from "@nextui-org/react";
 import { PokemonCard } from "@/components/PokemonCard";
-import { cleanPokemonName, pokemonTypeArray } from "@/utils/pokemon";
-import { usePokedex } from "@/hooks/usePokedex";
-
-
-interface PokemonFilters {
-  types: string[];
-  pokedex: "all" | "in" | "not-in";
-}
+import { paginate } from "@/utils/helpers";
+import { useFilters } from "@/hooks/useFilters";
+import { PokemonType } from "@/types";
+import { useDebounceFn } from "@/hooks/useDebounceFn";
+import { PokemonSearchDropdown } from "@/components/PokemonSearchDropdown";
 
 export function Pokemon() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState("");
+  const { filters, setSearch, setPokemonTypes, setPokedexView, applyFilters } = useFilters();
   const { data: pokemons } = useSuspenseQuery(getPokemonQuery());
-  const { pokemonIdList } = usePokedex();
-  const [prevPage, setPrevPage] = useState(1)
-  const [pokemonFilters, setpokemonFilters] = useState<PokemonFilters>({
-    types: [],
-    pokedex: 'all',
-  });
 
+  const filteredPokemons = applyFilters(pokemons);
+  const paginatedPokemons = paginate(filteredPokemons, page, pageSize);
+  const totalPages = Math.ceil(filteredPokemons.length / pageSize);
 
+  const debounceSearch = useDebounceFn(setSearch, 300);
 
-
-// const pokemonFilteredByPokedex =  pokemons.filter((pokemon) => {
-//   console.log('Pokedex filter')
-//     const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
-//     switch (pokedexType) {
-//       case 'in':
-//         return pokemonIdList.includes(pokemon.id);
-//       case 'not-in':
-//         return !pokemonIdList.includes(pokemon.id);
-//       default:
-//         return true;
-//     }
-//   });
-
-// const pokemonFilteredByType = pokemonFilteredByPokedex.filter((pokemon) => {
-//   console.log('type filter')
-//     if (pokemonFilters.types.length === 0) {
-//       return true;
-//     }
-//     return pokemon.apiTypes.some((type) =>
-//       pokemonFilters.types.includes(type.name.toLowerCase())
-//     );
-//   });
-
-// const pokemonFilteredByName = pokemonFilteredByType.filter((pokemon) => {
-//   console.log('filter name')
-
-//     const cleanPokemon = cleanPokemonName(pokemon.name);
-//     return cleanPokemon.includes(search.toLowerCase());
-//   });
-
-
-  const pokemonFilteredByPokedex = useMemo(() => {
-    console.log('Pokedex filter')
-    return pokemons.filter((pokemon) => {
-      const pokedexType = pokemonFilters.pokedex.toLocaleLowerCase();
-      switch (pokedexType) {
-        case 'in':
-          return pokemonIdList.includes(pokemon.id);
-        case 'not-in':
-          return !pokemonIdList.includes(pokemon.id);
-        default:
-          return true;
-      }
-    });
-  }, [pokemons, pokemonFilters, pokemonIdList]);
-
-  const pokemonFilteredByType = useMemo(() => {
-    console.log('Pokedex filter')
-    return pokemonFilteredByPokedex.filter((pokemon) => {
-      if (pokemonFilters.types.length === 0) {
-        return true;
-      }
-      return pokemon.apiTypes.some((type) =>
-        pokemonFilters.types.includes(type.name.toLowerCase())
-      );
-    });
-  }, [pokemonFilteredByPokedex, pokemonFilters.types]);
-
-  const pokemonFilteredByName = useMemo(() => {
-    console.log('filter name')
-    return pokemonFilteredByType.filter((pokemon) => {
-      const cleanPokemon = cleanPokemonName(pokemon.name);
-      return cleanPokemon.includes(search.toLowerCase());
-    });
-  }, [pokemonFilteredByType, search]);
-
-  const paginatedPokemons = pokemonFilteredByName.slice((page - 1) * pageSize, page * pageSize);
-
-  const totalPages = Math.ceil(pokemonFilteredByName.length / pageSize);
-
-  useEffect(() => {
-
-    if (totalPages === 1) {
-      return setPage(totalPages)
-    }
-
-    if (search === '' && prevPage !== page) {
-      setPage(prevPage)
-    }
-
-  }, [totalPages, search])
-
-  function handleSetpokemonFilters(event: React.ChangeEvent<HTMLSelectElement>) {
-    let types = event.target.value.split(',');
-    if (types.includes('')) {
-      types = []
-    }
-
-    setpokemonFilters({
-      ...pokemonFilters,
-      types: types
-    })
-  }
+  const handleSetpokemonFilters = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const types = event.target.value.split(",").filter(Boolean) as PokemonType[];
+    if (!types.length) return setPokemonTypes([]);
+    setPokemonTypes(types);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold my-4">Element catalogue</h1>
       <div className="w-full flex flex-col sm:flex-row items-center justify-start gap-6 mb-4">
-        <Input
-          label="Chercher un Pokémon"
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-1/2 sm:w-full"
-        />
+        <PokemonSearchDropdown pokemons={pokemons} onSearch={debounceSearch} />
         <Select
           value={pageSize}
           label="Sélectionner le nombre d'éléments à afficher"
@@ -154,15 +54,11 @@ export function Pokemon() {
           label="Choisissez un type de Pokémon"
           selectionMode="multiple"
           className="w-1/2 sm:w-full"
-          value={pokemonFilters.types}
+          value={filters.pokemonTypes}
           onChange={handleSetpokemonFilters}
         >
-          {Object.values(pokemonTypeArray).map((pokemonType) => (
-            <SelectItem
-              className="capitalize"
-              key={pokemonType}
-              value={pokemonType}
-            >
+          {Object.values(PokemonType).map((pokemonType) => (
+            <SelectItem className="capitalize" key={pokemonType} value={pokemonType}>
               {pokemonType}
             </SelectItem>
           ))}
@@ -174,19 +70,13 @@ export function Pokemon() {
           selectionMode="single"
           color="default"
           onChange={(e) => {
-            const selectedValue = e.target.value as 'in' | 'not-in' | 'all';
-            setpokemonFilters({ ...pokemonFilters, pokedex: selectedValue });
+            const selectedValue = e.target.value as "all" | "inside" | "outside";
+            setPokedexView(selectedValue);
           }}
         >
-          <SelectItem key={"all"} value="all">
-            all
-          </SelectItem>
-          <SelectItem key={"not-in"} value="not-in">
-            Not in
-          </SelectItem>
-          <SelectItem key={"in"} value="in">
-            In
-          </SelectItem>
+          <SelectItem key="all">all</SelectItem>
+          <SelectItem key="outside">Not in</SelectItem>
+          <SelectItem key="inside">In</SelectItem>
         </Select>
       </div>
       <div className="flex justify-center w-full">
@@ -201,12 +91,10 @@ export function Pokemon() {
         total={totalPages}
         initialPage={1}
         showControls
-        onChange={(page) => {
-          setPage(page)
-          setPrevPage(page)
-        }}
         className="my-4"
+        onChange={(page) => setPage(page)}
       />
     </div>
   );
 }
+

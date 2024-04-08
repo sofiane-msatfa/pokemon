@@ -16,9 +16,9 @@ interface PokemonCardProps {
 }
 
 export function PokemonCard({ pokemon }: PokemonCardProps) {
-  const { pokemonIdList, addPokemonToPokedex, removePokemonFromPokedex } = usePokedex();
+  const { pokedex, addPokemonToPokedex, removePokemonFromPokedex } = usePokedex();
 
-  const isPokemonInPokedex = pokemonIdList.includes(pokemon.id);
+  const isPokemonInPokedex = pokedex.includes(pokemon.id);
   const bgColor = getBackgroundColor(pokemon.apiTypes);
 
   const togglePokemonFromPokedex = () => {
@@ -31,13 +31,6 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
 
   const [showModal, setShowModal] = useState(false);
 
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
 
   return (
     <>
@@ -83,7 +76,7 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
               color="default"
               radius="lg"
               size="sm"
-              onClick={openModal}
+              onClick={() => setShowModal(true)}
             >
               Voir
             </Button>

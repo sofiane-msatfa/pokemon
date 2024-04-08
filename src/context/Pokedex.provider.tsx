@@ -19,7 +19,7 @@ export function PokedexProvider({ children }: { children: React.ReactNode }) {
   return (
     <PokedexContext.Provider
       value={{
-        pokemonIdList: pokedex,
+        pokedex,
         addPokemonToPokedex,
         removePokemonFromPokedex,
         resetPokedex,

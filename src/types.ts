@@ -25,7 +25,7 @@ export interface Stats {
 }
 
 export interface ApiType {
-  name: Type;
+  name: PokemonType;
   image: string;
 }
 
@@ -40,13 +40,6 @@ export interface ApiEvolution {
   pokedexId: number;
 }
 
-export interface PokemonType {
-  id: number;
-  name: string;
-  image: string;
-  englishName: string;
-}
-
 export interface ApiResistancesWithAbilities {
   name: string;
   damage_multiplier: number;
@@ -58,7 +51,7 @@ export interface ResistanceModifyingAbilitiesForApi {
   slug: string;
 }
 
-export enum Type {
+export enum PokemonType {
   Normal = "Normal",
   Combat = "Combat",
   Vol = "Vol",
